@@ -1,1 +1,80 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Pro-Connect | Digital Fax System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root { --primary: #007ACC; --secondary: #2C3E50; --bg: #f4f7f9; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; width: 90%; max-width: 450px; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-top: 6px solid var(--primary); }
+        .header { text-align: center; margin-bottom: 20px; }
+        .logo { font-size: 22px; font-weight: bold; color: var(--primary); text-transform: uppercase; }
+        .tagline { font-size: 12px; color: #777; margin-top: 5px; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        textarea { height: 80px; resize: none; }
+        button { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        button:hover { background: #005f99; }
+        .footer { font-size: 10px; color: #bbb; text-align: center; margin-top: 15px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">GLOBAL PRO-CONNECT</div>
+        <div class="tagline">Secure Professional Document Exchange</div>
+    </div>
+    <input type="text" id="name" placeholder="Full Name / Company Name">
+    <input type="text" id="job" placeholder="Professional Specialty">
+    <input type="text" id="fax" placeholder="Digital Fax / Phone Number">
+    <input type="email" id="email" placeholder="Professional Email">
+    <textarea id="details" placeholder="Message or Invoice Details..."></textarea>
+    <button onclick="generatePDF()">Generate Official PDF Fax</button>
+    <div class="footer">Verified via Digital Hash Layer<br>© 2026 Global Pro-Connect Network</div>
+</div>
+<script>
+    function generatePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const name = document.getElementById('name').value || "N/A";
+        const job = document.getElementById('job').value || "N/A";
+        const fax = document.getElementById('fax').value || "N/A";
+        const email = document.getElementById('email').value || "N/A";
+        const details = document.getElementById('details').value || "N/A";
+        const docID = "GPC-" + Math.random().toString(36).substring(2, 9).toUpperCase();
+        doc.setFillColor(0, 122, 204);
+        doc.rect(0, 0, 210, 35, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(20);
+        doc.text("GLOBAL PRO-CONNECT", 20, 22);
+        doc.setTextColor(40, 40, 40);
+        doc.setFontSize(14);
+        doc.text("OFFICIAL BUSINESS DOCUMENT", 20, 50);
+        doc.setLineWidth(0.5);
+        doc.line(20, 55, 190, 55);
+        doc.setFontSize(11);
+        doc.text(`Document ID: ${docID}`, 20, 65);
+        doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 72);
+        doc.setFont("helvetica", "bold");
+        doc.text("Publisher Details:", 20, 85);
+        doc.setFont("helvetica", "normal");
+        doc.text(`- Name: ${name}`, 25, 93);
+        doc.text(`- Specialty: ${job}`, 25, 100);
+        doc.text(`- Fax: ${fax}`, 25, 107);
+        doc.text(`- Email: ${email}`, 25, 114);
+        doc.setFont("helvetica", "bold");
+        doc.text("Message / Details:", 20, 125);
+        doc.setFont("helvetica", "normal");
+        const splitText = doc.splitTextToSize(details, 165);
+        doc.text(splitText, 25, 133);
+        doc.setFontSize(8);
+        doc.setTextColor(170, 170, 170);
+        const securityHash = btoa(name + docID).substring(0, 24);
+        doc.text(`Security Hash: ${securityHash}`, 20, 280);
+        doc.text("Verified Official Document - Global Pro-Connect Security Layer", 20, 285);
+        doc.save(`GPC_${name}_Document.pdf`);
+    }
+</script>
+</body>
+</html>
