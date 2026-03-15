@@ -1,73 +1,72 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycby9GvY_6o7W7S_V_P9G8C5f5R1S_P_X_E_G_M_P/exec'; 
-const form = document.getElementById('proForm');
+// كلمة السر الخاصة بك
+const MY_SECRET_PASSWORD = "Hassan_Pro_2026"; 
+const scriptURL = 'رابط_سكريبت_جوجل_الخاص_بك_هنا'; 
 
+// دالة التحقق من الدخول
+function checkLogin() {
+    const enteredPass = document.getElementById('passwordInput').value;
+    if (enteredPass === MY_SECRET_PASSWORD) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+    } else {
+        alert("عذراً، كلمة السر غير صحيحة!");
+    }
+}
+
+const form = document.getElementById('proForm');
 form.addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
-    btn.innerText = "جاري المعالجة...";
+    btn.innerText = "جاري الحفظ والإرسال...";
 
-    // إرسال البيانات لجوجل شيت
     fetch(scriptURL, { method: 'POST', body: new FormData(form)})
         .then(async response => {
             await createDigitalCard();
-            alert('تم بنجاح! تم توليد بطاقتك وحفظ بياناتك.');
+            alert('تم بنجاح! تم حفظ البيانات وتوليد ملف PDF.');
             form.reset();
             btn.disabled = false;
-            btn.innerText = "توليد البطاقة وحفظ البيانات";
+            btn.innerText = "توليد البطاقة وإرسال البيانات";
         })
         .catch(error => {
             console.error('Error!', error.message);
             btn.disabled = false;
-            btn.innerText = "خطأ! حاول مجدداً";
+            btn.innerText = "خطأ في الاتصال";
         });
 });
 
 async function createDigitalCard() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: [100, 60]
-    });
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: [100, 60] });
 
     const name = document.getElementById('name').value;
     const role = document.getElementById('role').value;
     const specialty = document.getElementById('specialty').value;
     const imageFile = document.getElementById('imageInput').files[0];
 
-    // تصميم رأس البطاقة
+    // تصميم البطاقة
     doc.setFillColor(0, 102, 204);
     doc.rect(0, 0, 100, 15, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(14);
     doc.text("Global Pro-Connect", 50, 10, { align: "center" });
 
-    // معالجة وإضافة الصورة الشخصية
     if (imageFile) {
         const imageData = await readFileAsDataURL(imageFile);
-        // إضافة إطار للصورة
-        doc.setDrawColor(200, 200, 200);
-        doc.rect(9, 19, 27, 27); 
         doc.addImage(imageData, 'JPEG', 10, 20, 25, 25);
     }
 
-    // إضافة النصوص المهنية
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(12);
-    const textX = imageFile ? 40 : 15; // إزاحة النص إذا وجدت صورة
+    const textX = imageFile ? 40 : 15;
     doc.text(`Name: ${name}`, textX, 25);
     doc.text(`Role: ${role}`, textX, 35);
     doc.text(`Specialty: ${specialty}`, textX, 45);
 
-    // إضافة الـ QR Code في الزاوية
+    // QR Code
     const qrDiv = document.getElementById("qrcode");
     qrDiv.innerHTML = ""; 
-    const qrcode = new QRCode(qrDiv, {
-        text: window.location.href,
-        width: 128,
-        height: 128
-    });
+    new QRCode(qrDiv, { text: window.location.href, width: 128, height: 128 });
 
     return new Promise((resolve) => {
         setTimeout(() => {
