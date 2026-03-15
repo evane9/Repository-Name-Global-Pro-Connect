@@ -1,6 +1,8 @@
+// الرابط الجديد الذي قمت بإنشائه
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxZdgRZU-Sw0mb4NAJa_RbKby4oPU2kftPPevakDLSTgl_KNUS5gGD_Ef3EJC3ghzhh/exec'; 
+
 // كلمة السر الخاصة بك
 const MY_SECRET_PASSWORD = "Hassan_Pro_2026"; 
-const scriptURL = 'رابط_سكريبت_جوجل_الخاص_بك_هنا'; 
 
 // دالة التحقق من الدخول
 function checkLogin() {
@@ -14,19 +16,21 @@ function checkLogin() {
 }
 
 const form = document.getElementById('proForm');
+
 form.addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
     btn.innerText = "جاري الحفظ والإرسال...";
 
+    // إرسال البيانات إلى جوجل شيت والبريد الإلكتروني
     fetch(scriptURL, { method: 'POST', body: new FormData(form)})
         .then(async response => {
             await createDigitalCard();
-            alert('تم بنجاح! تم حفظ البيانات وتوليد ملف PDF.');
+            alert('تم بنجاح! تم حفظ بياناتك وتوليد بطاقتك.');
             form.reset();
             btn.disabled = false;
-            btn.innerText = "توليد البطاقة وإرسال البيانات";
+            btn.innerText = "توليد البطاقة وحفظ البيانات";
         })
         .catch(error => {
             console.error('Error!', error.message);
@@ -37,7 +41,11 @@ form.addEventListener('submit', async e => {
 
 async function createDigitalCard() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: [100, 60] });
+    const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: [100, 60]
+    });
 
     const name = document.getElementById('name').value;
     const role = document.getElementById('role').value;
@@ -51,11 +59,13 @@ async function createDigitalCard() {
     doc.setFontSize(14);
     doc.text("Global Pro-Connect", 50, 10, { align: "center" });
 
+    // معالجة الصورة الشخصية
     if (imageFile) {
         const imageData = await readFileAsDataURL(imageFile);
         doc.addImage(imageData, 'JPEG', 10, 20, 25, 25);
     }
 
+    // إضافة النصوص
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(12);
     const textX = imageFile ? 40 : 15;
@@ -63,7 +73,7 @@ async function createDigitalCard() {
     doc.text(`Role: ${role}`, textX, 35);
     doc.text(`Specialty: ${specialty}`, textX, 45);
 
-    // QR Code
+    // إضافة الـ QR Code
     const qrDiv = document.getElementById("qrcode");
     qrDiv.innerHTML = ""; 
     new QRCode(qrDiv, { text: window.location.href, width: 128, height: 128 });
