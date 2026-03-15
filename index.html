@@ -3,35 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Pro-Connect | بطاقة المهندس الرقمية</title>
+    <title>Global Pro-Connect | نظام البطاقات الرقمية</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
-<div class="container">
-    <h2>Global Pro-Connect</h2>
-    <p>أدخل بياناتك وصورتك للحصول على بطاقتك الرقمية</p>
-    
-    <form id="proForm">
-        <input type="text" id="name" name="name" placeholder="الاسم الكامل" required>
-        <input type="text" id="role" name="role" placeholder="المسمى الوظيفي" required>
-        <input type="text" id="specialty" name="specialty" placeholder="التخصص الدقيق" required>
-        
-        <div style="margin: 10px 0; text-align: right; background: #eee; padding: 10px; border-radius: 8px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">اختر صورتك الشخصية:</label>
-            <input type="file" id="imageInput" accept="image/*" style="font-size: 12px;">
-        </div>
+    <div id="login-screen" class="container">
+        <h2>تسجيل الدخول</h2>
+        <p>النظام محمي، يرجى إدخال كلمة السر</p>
+        <input type="password" id="passwordInput" placeholder="كلمة السر">
+        <button onclick="checkLogin()">دخول للنظام</button>
+    </div>
 
-        <textarea id="notes" name="notes" placeholder="تفاصيل إضافية" rows="2"></textarea>
+    <div id="main-content" class="container" style="display:none;">
+        <h2>Global Pro-Connect</h2>
+        <p>أدخل البيانات لإرسال وتوليد البطاقة الاحترافية</p>
         
-        <button type="submit" id="submitBtn">توليد البطاقة وحفظ البيانات</button>
-    </form>
-    
-    <div id="qrcode" style="display:none;"></div>
-    <p class="footer-note">سيتم حفظ البيانات وتوليد ملف PDF بالصورة فوراً.</p>
-</div>
+        <form id="proForm">
+            <input type="text" id="name" name="name" placeholder="الاسم الكامل" required>
+            <input type="email" id="email" name="email" placeholder="البريد الإلكتروني (لإرسال البطاقة)" required>
+            <input type="text" id="role" name="role" placeholder="المسمى الوظيفي" required>
+            <input type="text" id="specialty" name="specialty" placeholder="التخصص الدقيق" required>
+            
+            <div class="image-upload-wrapper">
+                <label>اختر صورتك الشخصية:</label>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+
+            <textarea id="notes" name="notes" placeholder="ملاحظات إضافية" rows="2"></textarea>
+            
+            <button type="submit" id="submitBtn">توليد البطاقة وإرسال البيانات</button>
+        </form>
+        
+        <div id="qrcode" style="display:none;"></div>
+    </div>
 
 <script src="script.js"></script>
 </body>
