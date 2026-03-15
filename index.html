@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Pro-Connect | بطاقة المهندس الرقمية</title>
-    
     <link rel="stylesheet" href="style.css">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
@@ -14,23 +12,27 @@
 
 <div class="container">
     <h2>Global Pro-Connect</h2>
-    <p>أدخل بياناتك للحصول على بطاقتك الاحترافية الرقمية</p>
+    <p>أدخل بياناتك وصورتك للحصول على بطاقتك الرقمية</p>
     
     <form id="proForm">
         <input type="text" id="name" name="name" placeholder="الاسم الكامل" required>
-        <input type="text" id="role" name="role" placeholder="المسمى الوظيفي (مهندس، مصنع...)" required>
-        <input type="text" id="specialty" name="specialty" placeholder="التخصص" required>
-        <textarea id="notes" name="notes" placeholder="تفاصيل إضافية" rows="3"></textarea>
+        <input type="text" id="role" name="role" placeholder="المسمى الوظيفي" required>
+        <input type="text" id="specialty" name="specialty" placeholder="التخصص الدقيق" required>
         
-        <button type="submit" id="submitBtn">إنشاء البطاقة وحفظ البيانات</button>
+        <div style="margin: 10px 0; text-align: right; background: #eee; padding: 10px; border-radius: 8px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">اختر صورتك الشخصية:</label>
+            <input type="file" id="imageInput" accept="image/*" style="font-size: 12px;">
+        </div>
+
+        <textarea id="notes" name="notes" placeholder="تفاصيل إضافية" rows="2"></textarea>
+        
+        <button type="submit" id="submitBtn">توليد البطاقة وحفظ البيانات</button>
     </form>
     
     <div id="qrcode" style="display:none;"></div>
-    
-    <p class="footer-note">سيتم حفظ بياناتك وتوليد ملف PDF فوراً.</p>
+    <p class="footer-note">سيتم حفظ البيانات وتوليد ملف PDF بالصورة فوراً.</p>
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
