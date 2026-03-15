@@ -10,8 +10,9 @@
         .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; border-top: 6px solid #007ACC; }
         h2 { color: #007ACC; text-align: center; font-size: 22px; }
         input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 14px; background: #007ACC; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
-        button:disabled { background: #ccc; }
+        button { width: 100%; padding: 14px; background: #007ACC; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #005fa3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -19,7 +20,7 @@
         <h2>Global Pro-Connect</h2>
         <input type="text" id="n" placeholder="الاسم الكامل">
         <input type="text" id="e" placeholder="التخصص">
-        <textarea id="d" placeholder="تفاصيل البيانات" rows="4"></textarea>
+        <textarea id="d" placeholder="تفاصيل البيانات أو الملاحظات" rows="4"></textarea>
         <button id="btn" onclick="process()">توليد PDF وحفظ البيانات</button>
     </div>
 
@@ -28,29 +29,49 @@
             const n = document.getElementById('n').value;
             const e = document.getElementById('e').value;
             const d = document.getElementById('d').value;
-            if(!n || !e) return alert("يرجى ملء البيانات");
+            
+            if(!n || !e) return alert("يرجى ملء الاسم والتخصص");
 
             const btn = document.getElementById('btn');
             btn.disabled = true;
-            btn.innerText = "جاري المعالجة...";
+            btn.innerText = "جاري الحفظ والتوليد...";
 
-            // 1. توليد الـ PDF للمستخدم
+            // 1. توليد ملف الـ PDF
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             doc.text("Global Pro-Connect Report", 10, 10);
-            doc.text("Name: " + n, 10, 20);
-            doc.text("Expertise: " + e, 10, 30);
-            doc.text("Details: " + d, 10, 40);
+            doc.text("-------------------------", 10, 15);
+            doc.text("Name: " + n, 10, 25);
+            doc.text("Expertise: " + e, 10, 35);
+            doc.text("Details: " + d, 10, 45);
             doc.save(`GPC_${n}.pdf`);
 
-            // 2. إرسال البيانات لجدول جوجل (سنضع الرابط هنا لاحقاً)
-            const scriptURL = 'ضع_رابط_جوجل_هنا';
+            // 2. إرسال البيانات إلى جدول جوجل (الرابط الخاص بك)
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbw3s-1KG3kI37byN_gYq-3Z1ci-GZNV2DvQT_2AjMZzkZZW5EmJq5Hzej8P4wpUc7_i/exec';
+            
             try {
-                await fetch(scriptURL, { method: 'POST', body: new FormData(Object.assign(document.createElement('form'), {n,e,d})) });
-            } catch (e) { console.log("Success"); }
+                // نستخدم URLSearchParams لإرسال البيانات بشكل صحيح لـ Apps Script
+                const params = new URLSearchParams();
+                params.append('n', n);
+                params.append('e', e);
+                params.append('d', d);
 
-            btn.disabled = false;
-            btn.innerText = "تم بنجاح!";
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // لضمان الإرسال حتى مع قيود المتصفح
+                    body: params
+                });
+                
+                btn.innerText = "تم الحفظ بنجاح!";
+            } catch (error) {
+                console.error('Error!', error.message);
+                btn.innerText = "خطأ في الاتصال";
+            } finally {
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerText = "توليد PDF وحفظ البيانات";
+                }, 3000);
+            }
         }
     </script>
 </body>
