@@ -4,59 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Pro-Connect | بطاقة المهندس الرقمية</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
-    <style>
-        :root {
-            --primary-color: #0066cc;
-            --secondary-color: #004080;
-            --bg-color: #f4f7f9;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-        h2 { color: var(--primary-color); margin-bottom: 20px; }
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 15px;
-        }
-        button:hover { background-color: var(--secondary-color); }
-        #qrcode { display: none; } 
-        .footer-note { font-size: 12px; color: #666; margin-top: 20px; }
-    </style>
 </head>
 <body>
 
@@ -73,84 +25,12 @@
         <button type="submit" id="submitBtn">توليد البطاقة وحفظ البيانات</button>
     </form>
     
-    <div id="qrcode"></div>
-    <p class="footer-note">سيتم حفظ بياناتك في قاعدة البيانات وتوليد ملف PDF فوراً.</p>
+    <div id="qrcode" style="display:none;"></div>
+    
+    <p class="footer-note">سيتم حفظ بياناتك وتوليد ملف PDF فوراً.</p>
 </div>
 
-<script>
-    // تم وضع رابط الجسر الخاص بك هنا يا حسن
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby9GvY_6o7W7S_V_P9G8C5f5R1S_P_X_E_G_M_P/exec'; 
-    const form = document.getElementById('proForm');
-
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerText = "جاري الاتصال بالسيرفر...";
-
-        // 1. إرسال البيانات لجدول جوجل
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => {
-                // 2. توليد البطاقة الرقمية PDF
-                createDigitalCard();
-                alert('تم الحفظ بنجاح! جاري تحميل بطاقتك الشخصية...');
-                form.reset();
-                btn.disabled = false;
-                btn.innerText = "توليد البطاقة وحفظ البيانات";
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                btn.disabled = false;
-                btn.innerText = "فشل الاتصال.. حاول مرة أخرى";
-            });
-    });
-
-    function createDigitalCard() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({
-            orientation: 'landscape',
-            unit: 'mm',
-            format: [100, 60] 
-        });
-
-        const name = document.getElementById('name').value;
-        const role = document.getElementById('role').value;
-        const specialty = document.getElementById('specialty').value;
-
-        // تصميم البطاقة
-        doc.setFillColor(0, 102, 204);
-        doc.rect(0, 0, 100, 15, 'F');
-        
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(14);
-        doc.text("Global Pro-Connect", 50, 10, { align: "center" });
-
-        doc.setTextColor(40, 40, 40);
-        doc.setFontSize(12);
-        doc.text(`Name: ${name}`, 10, 25);
-        doc.text(`Role: ${role}`, 10, 35);
-        doc.text(`Specialty: ${specialty}`, 10, 45);
-
-        doc.setFontSize(8);
-        doc.setTextColor(100, 100, 100);
-        doc.text("Verified Identity - Global Pro System", 10, 55);
-
-        // إنشاء QR Code يوجه لموقعك الشخصي
-        const qrDiv = document.getElementById("qrcode");
-        qrDiv.innerHTML = ""; 
-        const qrcode = new QRCode(qrDiv, {
-            text: window.location.href,
-            width: 128,
-            height: 128
-        });
-
-        setTimeout(() => {
-            const qrImg = qrDiv.querySelector('img').src;
-            doc.addImage(qrImg, 'PNG', 75, 20, 20, 20);
-            doc.save(`Global_Pro_Card_${name}.pdf`);
-        }, 500);
-    }
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
