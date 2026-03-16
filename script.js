@@ -1,35 +1,49 @@
-// رابط Google Apps Script الخاص بك
-const scriptURL = 'https://script.google.com/macros/s/AKfycbxZdgRZU-Sw0mb4NAJa_RbKby4oPU2kftPPevakDLSTgl_KNUS5gGD_Ef3EJC3ghzhh/exec'; 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Pro-Connect | Final Version</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
 
-// كلمة السر الخاصة بك
-const MY_SECRET_PASSWORD = "Hassan_Pro_2026"; 
+    <div id="login-screen" class="container">
+        <h2 id="loginTitle">تسجيل الدخول</h2>
+        <p id="loginSub">النظام محمي، يرجى إدخال كلمة السر</p>
+        <input type="password" id="passwordInput" placeholder="كلمة السر">
+        <button onclick="checkLogin()" id="loginBtn">دخول للنظام</button>
+    </div>
 
-// نظام الترجمة واللغات
-let currentLang = 'ar';
-const translations = {
-    ar: { title: "Global Pro-Connect", name: "الاسم الكامل", email: "البريد الإلكتروني", role: "المسمى الوظيفي", spec: "التخصص الدقيق", color: "اختر لون البطاقة:", img: "اختر صورتك الشخصية:", btn: "توليد البطاقة وحفظ البيانات", loginT: "تسجيل الدخول", loginS: "النظام محمي، يرجى إدخال كلمة السر", loginB: "دخول للنظام" },
-    en: { title: "Global Pro-Connect", name: "Full Name", email: "Email Address", role: "Job Title", spec: "Specialty", color: "Choose Card Color:", img: "Choose Profile Picture:", btn: "Generate Card & Save Data", loginT: "Secure Login", loginS: "System protected, please enter password", loginB: "Access System" }
-};
+    <div id="main-content" class="container" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 id="title" style="margin:0;">Global Pro-Connect</h2>
+            <button onclick="toggleLanguage()" id="langBtn" style="width: auto; padding: 5px 15px; font-size: 14px; background: #333;">EN / عربي</button>
+        </div>
+        
+        <form id="proForm">
+            <input type="text" id="name" name="name" placeholder="الاسم الكامل" required>
+            <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required>
+            <input type="text" id="role" name="role" placeholder="المسمى الوظيفي" required>
+            <input type="text" id="specialty" name="specialty" placeholder="التخصص الدقيق" required>
+            
+            <div style="margin: 15px 0; text-align: right; background: #fdfdfd; padding: 12px; border-radius: 12px; border: 1px solid #eee;">
+                <label id="colorLabel" style="display:block; margin-bottom:8px; font-weight:bold;">اختر لون البطاقة:</label>
+                <input type="color" id="cardColor" value="#0066cc" style="width: 100%; height: 40px; border:none; cursor:pointer;">
+            </div>
 
-// دالة التحقق من الدخول
-function checkLogin() {
-    const enteredPass = document.getElementById('passwordInput').value;
-    if (enteredPass === MY_SECRET_PASSWORD) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-    } else {
-        alert(currentLang === 'ar' ? "عذراً، كلمة السر غير صحيحة!" : "Sorry, incorrect password!");
-    }
-}
+            <div class="image-upload-wrapper">
+                <label id="imgLabel">اختر صورتك الشخصية:</label>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
 
-// دالة تبديل اللغة
-function toggleLanguage() {
-    currentLang = currentLang === 'ar' ? 'en' : 'ar';
-    const t = translations[currentLang];
-    
-    document.getElementById('title').innerText = t.title;
-    document.getElementById('name').placeholder = t.name;
-    document.getElementById('email').placeholder = t.email;
-    document.getElementById('role').placeholder = t.role;
-    document.getElementById('specialty').placeholder = t.spec;
-    document.getElementById('color
+            <button type="submit" id="submitBtn">توليد البطاقة وحفظ البيانات</button>
+        </form>
+        <div id="qrcode" style="display:none;"></div>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>
